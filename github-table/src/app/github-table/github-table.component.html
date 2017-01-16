@@ -1,0 +1,30 @@
+<div *ngIf="githubDataLoaded">
+
+    Page number <b>{{pageNumber+1}}</b> |
+
+    <button type="button" class="btn btn-primary" (click)="prevPage()" [disabled]="!isPrevPage()">Prev</button> |
+    <button type="button" class="btn btn-primary" (click)="nextPage()" [disabled]="!isNextPage()">Next</button>
+
+    <br />
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID (index)</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Url</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let current of getTableData(); let i=index">
+                <th scope="row"> {{current.id}} ({{i + getElementOffset()}})</th>
+                <td>{{current.name}}</td>
+                <td>{{current.description}}</td>
+                <td>@{{current.url}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</div>
