@@ -30,7 +30,7 @@ export class GithubTableComponent implements OnInit {
     pageNumber = 0;
     totalElements = 0;
     elementsPrPage = 20;
-    elementsTotal = 100;
+    elementsTotal = 0;
 
     constructor(
         private _GithubDataLoaderService: GithubApiLoaderService
@@ -38,6 +38,7 @@ export class GithubTableComponent implements OnInit {
 
     ngOnInit() {
 
+        //subscribe to service on componend load.
         this._GithubDataLoaderService.loadData()
 				.subscribe(
 					data => {
@@ -48,9 +49,11 @@ export class GithubTableComponent implements OnInit {
 
     }
 
+    //executed when data is recived from github.
     onGithubDataLoaded(data){
 
         this.githubData = data.items;
+        this.elementsTotal = this.githubData.length;
         this.githubDataLoaded = true;
 
     }
@@ -59,10 +62,16 @@ export class GithubTableComponent implements OnInit {
     //could also do this with a filter
     getTableData():Array<any>{
 
+        //this could be cached in some way in order to optimize and speedup execution
         let returnSubArray = new Array();
 
         for(let i = 0; i < this.elementsPrPage; i ++){
             let index = i + (this.pageNumber * this.elementsPrPage);
+
+            //break out of loop if out of elements in githubData
+            if(index >= this.githubData.length){
+                break;
+            }
             returnSubArray.push(this.githubData[index]);
         }
 
@@ -70,6 +79,7 @@ export class GithubTableComponent implements OnInit {
 
     }
 
+    //used for index value in table.
     getElementOffset(){
 
         return this.pageNumber * this.elementsPrPage;
@@ -94,6 +104,7 @@ export class GithubTableComponent implements OnInit {
 
     }
 
+    //determines if there is a next page by checking if advancing to the next page still leaves at least one more element
     isNextPage(){
 
         if((this.pageNumber + 1) * this.elementsPrPage >= this.elementsTotal){
@@ -106,7 +117,6 @@ export class GithubTableComponent implements OnInit {
 
     nextPage(){
 
-        //console.log((this.pageNumber + 1) * this.elementsPrPage );
         if(this.isNextPage()){
             this.pageNumber ++;
         }

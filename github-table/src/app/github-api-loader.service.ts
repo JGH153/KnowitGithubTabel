@@ -12,8 +12,8 @@ export class GithubApiLoaderService {
     ) { }
 
     loadData() : Observable<any>{
-
-        return this._http.get('https://api.github.com/search/repositories?q=language:javascript&sort=stars&order=desc&per_page=100')
+        //max retrive count for API is 100 per page
+        return this._http.get('https://api.github.com/search/repositories?q=language:javascript&sort=stars&order=desc&per_page=81')
 			.map(response => response.json());
 
     }
