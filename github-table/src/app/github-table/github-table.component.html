@@ -1,3 +1,5 @@
+<h3><a class="reloadLink" (click)="reload()">{{title}}</a></h3>
+
 <div *ngIf="!githubDataLoaded">
     <img src="assets/loading.gif" alt="Loading..." height="200" width="200">
 </div>
@@ -11,21 +13,17 @@
 
     <br />
 
+    <span class="tableOverviewColumn" >Some text</span>
+
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>ID (index)</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Url</th>
+            <tr class="tableOverviewColumn" >
+                <th *ngFor="let current of tableColums; let i=index" [ngClass]="{sortColumnAsc: isSortingByAsc(current.name), sortColumnDesc: isSortingByDesc(current.name)}" (click)="setSortByColumn(current.name, current.isString)">{{current.name}}</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let current of getTableData(); let i=index">
-                <th scope="row"> {{current.id}} ({{i + getElementOffset()}})</th>
-                <td>{{current.name}}</td>
-                <td>{{current.description}}</td>
-                <td>@{{current.url}}</td>
+                <td *ngFor="let currentColum of tableColums; let i=index">{{current[currentColum.name]}}</td>
             </tr>
         </tbody>
     </table>

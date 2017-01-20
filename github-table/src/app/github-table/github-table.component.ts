@@ -23,14 +23,29 @@ Tabellen skal kun vise 20 repositoryer omgangen, men det skal være mulig å bla
 })
 export class GithubTableComponent implements OnInit {
 
+    title = 'Github API';
+
     githubData;
+    githubDataSorted;
     githubDataLoaded = false;
+
+    sortByColumn = "name";
+    sortAsc:boolean = true;
+    sortByString = true;
 
     //first page is 0, first is 1
     pageNumber = 0;
     totalElements = 0;
     elementsPrPage = 20;
     elementsTotal = 0;
+
+    tableColums = [
+        {"name": 'id', "isString": false},
+        {"name": 'name', "isString": true},
+        {"name": 'description', "isString": true},
+        {"name": 'url', "isString": true},
+        {"name": 'stargazers_count', "isString": false},
+    ]
 
     constructor(
         private _GithubDataLoaderService: GithubApiLoaderService
@@ -49,12 +64,64 @@ export class GithubTableComponent implements OnInit {
 
     }
 
+    //full reload of angular 2
+    reload(){
+        location.reload()
+    }
+
     //executed when data is recived from github.
     onGithubDataLoaded(data){
 
         this.githubData = data.items;
         this.elementsTotal = this.githubData.length;
+        this.sortArrayData();
         this.githubDataLoaded = true;
+
+    }
+
+    setSortByColumn(newColumnName, isString:boolean){
+
+        //revert if same
+        if(this.sortByColumn == newColumnName){
+            this.sortAsc = !this.sortAsc;
+        }else{
+            this.sortByColumn = newColumnName;
+            //reset to ASC on change
+            this.sortAsc = true;
+        }
+
+        this.sortByString = isString;
+
+        //reteting to fist page. makes no sence to keep page number
+        this.pageNumber = 0;
+
+
+        this.sortArrayData();
+
+    }
+
+    //sort array using the sort function
+    sortArrayData(){
+
+        let tempSubArray = this.githubData.slice();
+        tempSubArray.sort((a, b) => {
+
+            //if string or number
+            if(this.sortByString){
+                return a[this.sortByColumn].localeCompare(b[this.sortByColumn]);
+            }else{
+                return a[this.sortByColumn] - b[this.sortByColumn];
+            }
+
+
+        });
+
+        //reverse if desc
+        if(!this.sortAsc){
+            tempSubArray.reverse();
+        }
+
+        this.githubDataSorted = tempSubArray.slice();
 
     }
 
@@ -69,15 +136,17 @@ export class GithubTableComponent implements OnInit {
             let index = i + (this.pageNumber * this.elementsPrPage);
 
             //break out of loop if out of elements in githubData
-            if(index >= this.githubData.length){
+            if(index >= this.githubDataSorted.length){
                 break;
             }
-            returnSubArray.push(this.githubData[index]);
+            returnSubArray.push(this.githubDataSorted[index]);
         }
 
         return returnSubArray;
 
     }
+
+
 
     //used for index value in table.
     getElementOffset(){
@@ -123,5 +192,14 @@ export class GithubTableComponent implements OnInit {
 
 
     }
+
+
+    isSortingByAsc(columnName){
+        return this.sortByColumn == columnName && this.sortAsc;
+    }
+    isSortingByDesc(columnName){
+        return this.sortByColumn == columnName && !this.sortAsc;
+    }
+
 
 }

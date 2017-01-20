@@ -1,0 +1,16 @@
+
+.tableOverviewColumn th {
+	cursor: pointer;
+}
+
+.reloadLink{
+	cursor: pointer;
+}
+
+.sortColumnAsc{
+	color: red;
+}
+
+.sortColumnDesc{
+	color: blue;
+}
