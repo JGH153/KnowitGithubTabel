@@ -27,6 +27,7 @@ export class GithubTableComponent implements OnInit {
 
     githubData;
     githubDataSorted;
+    githunDataFilterd;
     githubDataLoaded = false;
 
     sortByColumn = "name";
@@ -38,6 +39,9 @@ export class GithubTableComponent implements OnInit {
     totalElements = 0;
     elementsPrPage = 20;
     elementsTotal = 0;
+    elementsTotalFiltered = 0;
+
+    inputFilterValue = "a";
 
     tableColums = [
         {"name": 'id', "isString": false},
@@ -69,13 +73,43 @@ export class GithubTableComponent implements OnInit {
         location.reload()
     }
 
+    newFilterValue(newValue){
+        this.inputFilterValue = newValue;
+        console.log(this.inputFilterValue);
+        this.filterArrayData();
+        this.sortArrayData();
+    }
+
     //executed when data is recived from github.
     onGithubDataLoaded(data){
 
         this.githubData = data.items;
         this.elementsTotal = this.githubData.length;
+        //filter before sort (less to sort)
+        this.filterArrayData();
         this.sortArrayData();
         this.githubDataLoaded = true;
+
+    }
+
+    filterArrayData(){
+
+        let tempSubArray = new Array();
+
+        for(let i = 0; i < this.githubData.length; i ++){
+
+            if(this.inputFilterValue.length == 0 || this.githubData[i].name.includes(this.inputFilterValue)){
+                tempSubArray.push(this.githubData[i]);
+            }
+
+        }
+
+        //reteting to fist page. makes no sence to keep page number
+        this.pageNumber = 0;
+
+        //set elementsTotalFiltered for use in next page checking
+        this.elementsTotalFiltered = tempSubArray.length;
+        this.githunDataFilterd = tempSubArray.slice();
 
     }
 
@@ -100,10 +134,10 @@ export class GithubTableComponent implements OnInit {
 
     }
 
-    //sort array using the sort function
+    //sort array using the sort function. takes in filtered and stores in sorted
     sortArrayData(){
 
-        let tempSubArray = this.githubData.slice();
+        let tempSubArray = this.githunDataFilterd.slice();
         tempSubArray.sort((a, b) => {
 
             //if string or number
@@ -129,6 +163,10 @@ export class GithubTableComponent implements OnInit {
     //could also do this with a filter
     getTableData():Array<any>{
 
+        if (!String.prototype.includes) {
+            console.error("String.prototype.includes NOT supported ES6");
+        }
+
         //this could be cached in some way in order to optimize and speedup execution
         let returnSubArray = new Array();
 
@@ -139,16 +177,17 @@ export class GithubTableComponent implements OnInit {
             if(index >= this.githubDataSorted.length){
                 break;
             }
+
             returnSubArray.push(this.githubDataSorted[index]);
+
         }
+
 
         return returnSubArray;
 
     }
 
-
-
-    //used for index value in table.
+    //used for index value in table. NOT IN USE FOR NOW
     getElementOffset(){
 
         return this.pageNumber * this.elementsPrPage;
@@ -176,7 +215,7 @@ export class GithubTableComponent implements OnInit {
     //determines if there is a next page by checking if advancing to the next page still leaves at least one more element
     isNextPage(){
 
-        if((this.pageNumber + 1) * this.elementsPrPage >= this.elementsTotal){
+        if((this.pageNumber + 1) * this.elementsPrPage >= this.elementsTotalFiltered){
             return false;
         }else{
             return true
@@ -193,7 +232,7 @@ export class GithubTableComponent implements OnInit {
 
     }
 
-
+    //for css class. If current colum is the one sorted by and if sorting asc
     isSortingByAsc(columnName){
         return this.sortByColumn == columnName && this.sortAsc;
     }

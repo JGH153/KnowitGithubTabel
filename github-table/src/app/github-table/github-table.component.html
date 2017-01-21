@@ -9,7 +9,9 @@
     Page number <b>{{pageNumber+1}}</b> |
 
     <button type="button" class="btn btn-primary" (click)="prevPage()" [disabled]="!isPrevPage()">Prev</button> |
-    <button type="button" class="btn btn-primary" (click)="nextPage()" [disabled]="!isNextPage()">Next</button>
+    <button type="button" class="btn btn-primary" (click)="nextPage()" [disabled]="!isNextPage()">Next</button> |
+    Filter by name:
+    <input type="text" [ngModel]="inputFilterValue" (ngModelChange)="newFilterValue($event)" />
 
     <br />
 
