@@ -6,6 +6,8 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 
 import { GithubApiLoaderService } from './github-api-loader.service';
+import { LocalStorageService }  from './local-storage.service';
+
 import { GithubTableComponent } from './github-table/github-table.component';
 import { GithubObjectDetailComponent } from './github-object-detail/github-object-detail.component';
 
@@ -21,7 +23,8 @@ import { GithubObjectDetailComponent } from './github-object-detail/github-objec
         HttpModule
     ],
     providers: [
-        GithubApiLoaderService
+        GithubApiLoaderService,
+        LocalStorageService
     ],
     bootstrap: [
         AppComponent

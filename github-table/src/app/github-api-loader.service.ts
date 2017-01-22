@@ -4,6 +4,8 @@ import { Http } from '@angular/http';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 
+import { LocalStorageService }  from './local-storage.service';
+
 @Injectable()
 export class GithubApiLoaderService {
 

@@ -4,6 +4,8 @@ import { GithubApiLoaderService } from './../github-api-loader.service';
 
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
+import { LocalStorageService }  from './../local-storage.service';
+
 
 
 /*
@@ -55,10 +57,13 @@ export class GithubTableComponent implements OnInit {
     ]
 
     constructor(
-        private _GithubDataLoaderService: GithubApiLoaderService
+        private _GithubDataLoaderService: GithubApiLoaderService,
+        private _localStorageService: LocalStorageService,
     ) { }
 
     ngOnInit() {
+
+
 
         //subscribe to service on componend load.
         this._GithubDataLoaderService.loadData()
@@ -71,9 +76,41 @@ export class GithubTableComponent implements OnInit {
 
     }
 
-    //full reload of angular 2
+    getLocalStorageValues(){
+
+        if(this._localStorageService.get("GithubTable_SettingsSet") == "true"){
+            this.sortByColumn = this._localStorageService.get("GithubTable_sortByColumn");
+            this.sortAsc = (this._localStorageService.get("GithubTable_sortAsc") === 'true');
+            this.sortByString = (this._localStorageService.get("GithubTable_sortByString") === 'true');
+            this.inputFilterValue  = this._localStorageService.get("GithubTable_inputFilterValue");
+
+            this.filterArrayData();
+            this.sortArrayData();
+
+            this.pageNumber = parseInt(this._localStorageService.get("GithubTable_pageNumber"));
+
+            console.log("LOADED FROM LOCAL STORAGE: ");
+        }
+
+    }
+
+    setLocalStorageValues(){
+
+        this._localStorageService.set("GithubTable_SettingsSet", "true");
+
+        this._localStorageService.set("GithubTable_sortByColumn", this.sortByColumn);
+        this._localStorageService.set("GithubTable_sortAsc", this.sortAsc.toString());
+        this._localStorageService.set("GithubTable_sortByString", this.sortByString.toString());
+        this._localStorageService.set("GithubTable_pageNumber", this.pageNumber.toString());
+        this._localStorageService.set("GithubTable_inputFilterValue", this.inputFilterValue);
+
+
+    }
+
+    //full reload of angular 2, and clear local storage
     reload(){
-        location.reload()
+        localStorage.clear();
+        location.reload();
     }
 
     selectedTableRow(subObjectId):void{
@@ -85,6 +122,7 @@ export class GithubTableComponent implements OnInit {
                 //assign object to variable
                 this.selectedSubElement = this.githubData[i];
                 this.subElementIsSelected = true;
+                this.setLocalStorageValues();
                 //no point in further searching
                 return;
             }
@@ -108,6 +146,7 @@ export class GithubTableComponent implements OnInit {
         this.inputFilterValue = newValue;
         this.filterArrayData();
         this.sortArrayData();
+        this.setLocalStorageValues();
     }
 
     //executed when data is recived from github.
@@ -119,6 +158,7 @@ export class GithubTableComponent implements OnInit {
         this.filterArrayData();
         this.sortArrayData();
         this.githubDataLoaded = true;
+        this.getLocalStorageValues();
 
     }
 
@@ -161,6 +201,7 @@ export class GithubTableComponent implements OnInit {
 
 
         this.sortArrayData();
+        this.setLocalStorageValues();
 
     }
 
@@ -229,6 +270,7 @@ export class GithubTableComponent implements OnInit {
         if(this.isPrevPage()){
             this.pageNumber --;
         }
+        this.setLocalStorageValues();
 
     }
 
@@ -258,6 +300,7 @@ export class GithubTableComponent implements OnInit {
         if(this.isNextPage()){
             this.pageNumber ++;
         }
+        this.setLocalStorageValues();
 
 
     }
