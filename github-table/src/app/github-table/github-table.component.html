@@ -6,6 +6,8 @@
 
 <div *ngIf="githubDataLoaded">
 
+
+
     Page number <b>{{pageNumber+1}}</b> |
 
     <button type="button" class="btn btn-primary" (click)="prevPage()" [disabled]="!isPrevPage()">Prev</button> |
@@ -15,20 +17,30 @@
 
     <br />
 
-    <span class="tableOverviewColumn" >Some text</span>
-
-    <table class="table table-striped">
+    <table class="table table-striped" *ngIf="!subElementIsSelected">
         <thead>
             <tr class="tableOverviewColumn" >
-                <th *ngFor="let current of tableColums; let i=index" [ngClass]="{sortColumnAsc: isSortingByAsc(current.name), sortColumnDesc: isSortingByDesc(current.name)}" (click)="setSortByColumn(current.name, current.isString)">{{current.name}}</th>
+                <th
+                    *ngFor="let current of tableColums; let i=index"
+                    [ngClass]="{sortColumnAsc: isSortingByAsc(current.name), sortColumnDesc: isSortingByDesc(current.name)}"
+                    (click)="setSortByColumn(current.name, current.isString)">
+                        {{current.name}}
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let current of getTableData(); let i=index">
-                <td *ngFor="let currentColum of tableColums; let i=index">{{current[currentColum.name]}}</td>
+            <tr *ngFor="let current of getTableData(); let idx=index" class="tableRowSelect">
+                <td *ngFor="let currentColum of tableColums; let i=index" (click)="selectedTableRow(current.id)">{{current[currentColum.name]}}</td>
             </tr>
         </tbody>
     </table>
+
+    <div *ngIf="subElementIsSelected" >
+        <app-github-object-detail
+            [selectedObject]="selectedSubElement"
+            (exitDetailComponentEE)="selectedSubElementCompleteEvent($event)"
+        ></app-github-object-detail>
+    </div>
 
 
 </div>

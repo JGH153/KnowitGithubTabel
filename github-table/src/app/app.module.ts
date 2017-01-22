@@ -7,11 +7,13 @@ import { AppComponent } from './app.component';
 
 import { GithubApiLoaderService } from './github-api-loader.service';
 import { GithubTableComponent } from './github-table/github-table.component';
+import { GithubObjectDetailComponent } from './github-object-detail/github-object-detail.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        GithubTableComponent
+        GithubTableComponent,
+        GithubObjectDetailComponent
     ],
     imports: [
         BrowserModule,

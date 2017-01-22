@@ -1,0 +1,19 @@
+<table class="table table-striped" *ngIf="!subElementIsSelected">
+
+    <thead>
+        <tr class="tableOverviewColumn" >
+            <th>Repo {{selectedObject.name}} extra info</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let current of datapoints; let i=index">
+            <td>
+                <b>{{current.name}}</b>: {{selectedObject[current.name]}}
+            </td>
+        </tr>
+    </tbody>
+
+</table>
+
+<button type="button" class="btn btn-primary" (click)="goBack()">Back</button>

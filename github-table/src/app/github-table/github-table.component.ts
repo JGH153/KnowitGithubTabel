@@ -41,7 +41,10 @@ export class GithubTableComponent implements OnInit {
     elementsTotal = 0;
     elementsTotalFiltered = 0;
 
-    inputFilterValue = "a";
+    selectedSubElement;
+    subElementIsSelected = false;
+
+    inputFilterValue = "";
 
     tableColums = [
         {"name": 'id', "isString": false},
@@ -73,9 +76,36 @@ export class GithubTableComponent implements OnInit {
         location.reload()
     }
 
+    selectedTableRow(subObjectId):void{
+
+        //look in unsorted array just in case.
+        for(let i = 0; i < this.githubData.length; i ++){
+
+            if(this.githubData[i].id == subObjectId){
+                //assign object to variable
+                this.selectedSubElement = this.githubData[i];
+                this.subElementIsSelected = true;
+                //no point in further searching
+                return;
+            }
+
+        }
+
+    }
+
+    selectedSubElementCompleteEvent(event){
+
+        if(event == true){
+
+            this.subElementIsSelected = false;
+            this.selectedSubElement = null;
+
+        }
+
+    }
+
     newFilterValue(newValue){
         this.inputFilterValue = newValue;
-        console.log(this.inputFilterValue);
         this.filterArrayData();
         this.sortArrayData();
     }

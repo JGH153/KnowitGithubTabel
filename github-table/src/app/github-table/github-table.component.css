@@ -14,3 +14,7 @@
 .sortColumnDesc{
 	color: blue;
 }
+
+.tableRowSelect{
+	cursor: pointer;;
+}
