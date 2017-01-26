@@ -17,23 +17,25 @@
 
     <br />
 
-    <table class="table table-striped" *ngIf="!subElementIsSelected">
-        <thead>
-            <tr class="tableOverviewColumn" >
-                <th
-                    *ngFor="let current of tableColums; let i=index"
-                    [ngClass]="{sortColumnAsc: isSortingByAsc(current.name), sortColumnDesc: isSortingByDesc(current.name)}"
-                    (click)="setSortByColumn(current.name, current.isString)">
-                        {{current.name}}
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let current of getTableData(); let idx=index" class="tableRowSelect">
-                <td *ngFor="let currentColum of tableColums; let i=index" (click)="selectedTableRow(current.id)">{{current[currentColum.name]}}</td>
-            </tr>
-        </tbody>
-    </table>
+	<div class="table-responsive">
+	    <table class="table table-striped" *ngIf="!subElementIsSelected">
+	        <thead>
+	            <tr class="tableOverviewColumn" >
+	                <th
+	                    *ngFor="let current of tableColums; let i=index"
+	                    [ngClass]="{sortColumnAsc: isSortingByAsc(current.name), sortColumnDesc: isSortingByDesc(current.name)}"
+	                    (click)="setSortByColumn(current.name, current.isString)">
+	                        {{current.name}}
+	                </th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            <tr *ngFor="let current of getTableData(); let idx=index" class="tableRowSelect">
+	                <td *ngFor="let currentColum of tableColums; let i=index" (click)="selectedTableRow(current.id)">{{current[currentColum.name]}}</td>
+	            </tr>
+	        </tbody>
+	    </table>
+	</div>
 
     <div *ngIf="subElementIsSelected" >
         <app-github-object-detail

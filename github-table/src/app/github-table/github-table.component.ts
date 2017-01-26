@@ -234,27 +234,10 @@ export class GithubTableComponent implements OnInit {
     //could also do this with a filter
     getTableData():Array<any>{
 
-        if (!String.prototype.includes) {
-            console.error("String.prototype.includes NOT supported ES6");
-        }
-
-        //this could be cached in some way in order to optimize and speedup execution
-        let returnSubArray = new Array();
-
-        for(let i = 0; i < this.elementsPrPage; i ++){
-            let index = i + (this.pageNumber * this.elementsPrPage);
-
-            //break out of loop if out of elements in githubData
-            if(index >= this.githubDataSorted.length){
-                break;
-            }
-
-            returnSubArray.push(this.githubDataSorted[index]);
-
-        }
-
-
-        return returnSubArray;
+		return this.githubDataSorted.slice(
+			(this.pageNumber * this.elementsPrPage),
+			(this.pageNumber * this.elementsPrPage) + this.elementsPrPage
+		);
 
     }
 
