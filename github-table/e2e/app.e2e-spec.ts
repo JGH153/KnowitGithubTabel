@@ -1,6 +1,6 @@
 import { GithubTablePage } from './app.po';
 
-describe('github-table App', function() {
+describe('github-table App', () => {
   let page: GithubTablePage;
 
   beforeEach(() => {
